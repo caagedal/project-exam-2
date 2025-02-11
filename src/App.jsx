@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 // import Layout
-// import Home
+import Home from "./pages/HomePage";
 // import VenuesPage
 // import VenuePage
 // import login
@@ -12,7 +12,7 @@ export default function App(){
   return(
     <div>
       <Routes>
-        <Route path="/" element={<Laout/>}>
+        <Route path="/" element={<Home/>}>
           <Route></Route>
         </Route>
       </Routes>
