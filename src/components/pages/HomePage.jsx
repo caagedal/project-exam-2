@@ -51,7 +51,8 @@ export default function Home() {
       </div>
 
       {/* Featured Destinations */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-7xl mx-auto  py-16">
+        
         <h2 className="text-3xl font-bold mb-8">Explore destinations</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuredDestinations.map((destination, index) => (

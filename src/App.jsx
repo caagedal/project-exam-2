@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-// import Layout
+import Layout from "./components/pages/Layout";
 import Home from "./components/pages/HomePage";
 // import VenuesPage
 // import VenuePage
@@ -10,13 +10,13 @@ import Home from "./components/pages/HomePage";
 export default function App(){
 
   return(
-    <div>
+    <>
       <Routes>
-        <Route path="/" element={<Home/>}>
-          <Route></Route>
+        <Route path="/" element={<Layout />}>
+          <Route index element = {<Home />}/>
         </Route>
       </Routes>
-    </div>
+    </>
   )
 
 }
