@@ -22,7 +22,7 @@ const useLogin = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                const errorMessage = data.errors?.[0]?.message || "Login failed";
+                const errorMessage = data?.errors?.length ? data.errors[0].message : "Login failed";
                 throw new Error(errorMessage);
             }
 
@@ -33,7 +33,7 @@ const useLogin = () => {
                 email,
                 avatar,
                 banner,
-                token: accessToken,
+                token: `Bearer ${accessToken}`,
                 venueManager,
             };
 

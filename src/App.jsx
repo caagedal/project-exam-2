@@ -3,8 +3,9 @@ import Layout from "./components/pages/Layout";
 import Home from "./components/pages/HomePage";
 // import VenuesPage
 // import VenuePage
-// import login
-// import profile
+import Login from "./components/pages/Login";
+import Register from "./components/pages/register";
+import ProfilePage from "./components/pages/profile";
 // import admin
 
 export default function App(){
@@ -14,6 +15,9 @@ export default function App(){
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element = {<Home />}/>
+          <Route path="login" element = {<Login />}/>
+          <Route path="register" element = {<Register/>}/>
+          <Route path="profile/:username" element = {<ProfilePage/>}/>
         </Route>
       </Routes>
     </>

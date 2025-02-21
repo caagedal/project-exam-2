@@ -2,6 +2,17 @@ import MenuLink from "./MenuLink";
 import { useRef, useEffect } from "react";
 import useAuthStore from "../../js/store/useAuthStore";
 
+
+/**
+ * DropdownMenu component
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {boolean} props.isOpen - Determines if the dropdown is open
+ * @param {Function} props.onClose - Function to close the dropdown
+ * @returns {JSX.Element | null} - The rendered dropdown menu or null if closed
+ */
+
 export default function DropdownMenu({ isOpen, onClose }) {
     const { user, isVenueManager, logout } = useAuthStore();
     const menuRef = useRef(null);
@@ -9,32 +20,50 @@ export default function DropdownMenu({ isOpen, onClose }) {
     // Handle click outside to close dropdown
     useEffect(() => {
         function handleClickOutside(event) {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
+            // Check if the click target is the toggle button
+            const isToggleButton = event.target.closest('button[aria-label="Dropdown menu"]');
+            
+            if (menuRef.current && !menuRef.current.contains(event.target) && !isToggleButton) {
                 onClose();
             }
         }
-
+    
         if (isOpen) {
             document.addEventListener("mousedown", handleClickOutside);
         }
-
+    
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isOpen, onClose]); // Depend on isOpen to add/remove listener
+    }, [isOpen, onClose]); 
+
+    const handleLogout = () => {
+        logout();
+        onClose(); // Close the dropdown after logout
+    };
 
     return (
         isOpen && (
-            <div ref={menuRef} className="absolute top-full right-0 bg-white shadow-md p-4 rounded">
+            <div 
+                ref={menuRef} 
+                className="absolute top-full right-0 bg-white shadow-md p-4 rounded z-50 mt-2 min-w-[200px]"
+            >
                 <nav>
-                    <ul>
-                        <MenuLink to={`profile/${user?.name}`} label="Profile" onClose={onClose} />
-                        <MenuLink to={`profile/${user?.name}/bookings`} label="My Bookings" onClose={onClose} />
+                    <ul className="space-y-2">
+                        <MenuLink to={`/profile/${user?.name}`} label="Profile" onClose={onClose} />
+                        <MenuLink to={`/profile/${user?.name}/bookings`} label="My Bookings" onClose={onClose} />
                         {isVenueManager && (
-                            <MenuLink to={`profile/${user?.name}/venue-manager`} label="Manager Dashboard" onClose={onClose} />
+                            <MenuLink 
+                                to={`/profile/${user?.name}/venue-manager`} 
+                                label="Manager Dashboard" 
+                                onClose={onClose} 
+                            />
                         )}
                         <li>
-                            <button onClick={logout} className="text-red-600 hover:text-red-800 font-semibold">
+                            <button 
+                                onClick={handleLogout} 
+                                className="w-full text-left px-4 py-2 text-red-600 hover:text-red-800 hover:bg-gray-50 rounded font-semibold"
+                            >
                                 Log out
                             </button>
                         </li>
@@ -44,67 +73,3 @@ export default function DropdownMenu({ isOpen, onClose }) {
         )
     );
 }
-
-
-// import MenuLink from "./MenuLink";
-// import { useState, useRef, useEffect } from "react";
-// import useAuthStore from "../../js/store/useAuthStore";
-
-// export default function DropdownMenu(isOpen, onClose){
-//     const {user, isVenueManager, logout} = useAuthStore();
-//     const [isOpen, setIsOpen] = useState(false);
-//     const menuRef = useRef(null);
-
-//     const handleClose = () => {
-//         setIsOpen(false);
-//     };
-
-//     useEffect(() => {
-//         function handleClickOutside(e) {
-//             if (menuRef.current && !menuRef.current.contains(e.target)) {
-//                 handleClose();
-//             }
-//         } if (isOpen){
-//             document.addEventListener("mousedown", handleClickOutside);
-//         }
-
-//         return () => {
-//             document.removeEventListener("mousedown", handleClickOutside);
-//         };
-//     }, [isOpen]);
-
-//     return (
-//         <div className="relative">
-//             {isOpen && (
-//                 <nav className="">
-//                     <ul>
-//                         <MenuLink
-//                             to={`profile/${user.name}`}
-//                             title="Profile"
-//                             onClose={handleClose}
-//                         />
-//                         <MenuLink
-//                             to={`profile/${user.name}/bookings`}
-//                             title="My Bookings"
-//                             onClose={handleClose}
-//                         />
-//                         {isVenueManager && (
-//                             <MenuLink
-//                                 to={`profile/${user.name}/venue-manager`}
-//                                 title="Manager Dashboard"
-//                                 onClose={handleClose}
-//                             />
-//                         )}
-//                         <li className="">
-//                             <button
-//                                 onClick={logout}
-//                                 className="">
-//                                     Log out
-//                                 </button>
-//                         </li>
-//                     </ul>
-//                 </nav>
-//             )}
-//         </div>
-//     )
-// }

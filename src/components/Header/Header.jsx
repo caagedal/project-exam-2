@@ -1,47 +1,57 @@
 import { NavLink } from "react-router-dom";
 import useAuthStore from "../../js/store/useAuthStore";
-import { useState } from "react";
+import { useState } from "react";  // Remove useRef and useEffect
 import DropdownMenu from "./DropdownMenu";
+import { Menu } from "lucide-react";
+
+/**
+ * Header component
+ * 
+ * @component
+ * @returns {JSX.Element} - The rendered header component
+ */
 
 function Header() {
-    const { isLoggedIn} = useAuthStore();
+    const { isLoggedIn } = useAuthStore();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const handleMenuClick = () => {
+        setIsDropdownOpen(prevState => !prevState);
+    };
 
     return (
         <header>
-            <div className="flex justify-between align-middle w-7xl">
+            <div className="flex justify-between items-center max-w-7xl p-2 align-middle mx-auto">
                 <NavLink to="/">
-                    <h1>Holidaze</h1>
+                    <img
+                        src="/full-logo.svg"
+                        alt="Holidaze logo"
+                    />
                 </NavLink>
 
-                {/* User is NOT logged in */}
                 {!isLoggedIn ? (
-                    <div>
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="text-neutral-dark bg-none"
-                        >
+                    <div className="flex justify-center align-middle">
+                        <NavLink to="/register" className="text-neutral-dark px-4 py-2">
                             Sign up
-                        </button>
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="bg-blue-main text-white"
-                        >
+                        </NavLink>
+                        <NavLink to="/login" className="bg-blue-600 text-white px-4 py-2 rounded bg-blue-main">
                             Login
-                        </button>
+                        </NavLink>
                     </div>
                 ) : (
-                    /* User is logged in */
                     <div className="relative">
                         <button
-                            onClick={() => setIsDropdownOpen((prev) => !prev)}
-                            className="flex items-center space-x-2"
+                            onClick={handleMenuClick}
+                            className="flex items-center space-x-2 bg-gray-700 text-neutral-dark px-4 py-2 rounded"
                             aria-label="Dropdown menu"
+                            aria-expanded={isDropdownOpen}
                         >
-                            Menu
+                            <Menu className="text-neutral-dark text-2xl" />
                         </button>
-                        {/* Pass props correctly */}
-                        <DropdownMenu isOpen={isDropdownOpen} onClose={() => setIsDropdownOpen(false)} />
+                        <DropdownMenu 
+                            isOpen={isDropdownOpen}
+                            onClose={() => setIsDropdownOpen(false)}
+                        />
                     </div>
                 )}
             </div>
