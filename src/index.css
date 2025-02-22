@@ -15,8 +15,11 @@
   --color-neutral-dark: #343A40;
   --color-neutral-medium: #757575;
   --color-neutral-light: #ECECEC;
+  --color-neutral-b: #D9D9D9;
   --color-gray-overlay: #6b7280;
   --color-warning: #C33737;
+  --color-text-dark: #1E1E1E;
+  
 
   --breakpoint-*: initial;
   --breakpoint-xs: 290px;

@@ -8,18 +8,15 @@ export default function Home() {
     { name: 'City Apartments', image: 'https://images.unsplash.com/photo-1623234478656-88cb926b72a5?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', count: '312 venues' },
   ]
 
-  const trendingVenues = [
-    // Your trending venues data
-  ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-neutral-dark">
       {/* Hero Section */}
-      <div className="relative h-[80vh] bg-gradient-to-b from-black/50 to-black/20">
+      <div className="relative bg-gradient-to-b from-black/50 to-black/20 flex justify-center">
         <img 
           src="https://images.unsplash.com/photo-1638297184082-bd7fe6081c82?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
           alt="Beautiful destination" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="inset-0 w-full max-h-[600px]  object-cover"
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 text-center text-white">
@@ -30,25 +27,30 @@ export default function Home() {
               Discover unique places to stay around the world
             </p>
             
-            {/* Search Bar */}
-            <div className="bg-white rounded-full shadow-lg p-2">
-              <form className="flex items-center">
-                <div className="flex-1 flex items-center px-4">
-                  <Search className="w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Where are you going?"
-                    className="w-full px-4 py-2 focus:outline-none"
-                  />
-                </div>
-                <button className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
-                  Search
-                </button>
-              </form>
-            </div>
+            
           </div>
         </div>
+        {/* Search Bar */}
+        <div className='bg-blue-main absolute flex justify-center px-10 py-5'>
+          <div className="  bg-white rounded-full shadow-lg p-2 flex items-center justify-center bg">
+                <form className="flex items-center">
+                  <div className="flex-1 flex items-center px-4">
+                    <Search className="w-5 h-5 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Where are you going?"
+                      className="w-full px-4 py-2 focus:outline-none"
+                    />
+                  </div>
+                  <button className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+                    Search
+                  </button>
+                </form>
+              </div>
+        </div>
       </div>
+
+      
 
       {/* Featured Destinations */}
       <div className="max-w-7xl mx-auto  py-16">
@@ -76,6 +78,8 @@ export default function Home() {
           ))}
         </div>
       </div>
+          
+          
 
       {/* Trending Section */}
       <div className="bg-white py-16">

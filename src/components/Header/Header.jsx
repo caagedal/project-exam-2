@@ -21,7 +21,7 @@ function Header() {
 
     return (
         <header>
-            <div className="flex justify-between items-center max-w-7xl p-2 align-middle mx-auto">
+            <div className="flex justify-between items-center max-w-7xl p-2 align-middle mx-auto text-neutral-dark">
                 <NavLink to="/">
                     <img
                         src="/full-logo.svg"

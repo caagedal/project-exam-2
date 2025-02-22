@@ -46,12 +46,12 @@ export default function DropdownMenu({ isOpen, onClose }) {
         isOpen && (
             <div 
                 ref={menuRef} 
-                className="absolute top-full right-0 bg-white shadow-md p-4 rounded z-50 mt-2 min-w-[200px]"
+                className="absolute top-full right-0 bg-white shadow-md p-4 rounded z-50 mt-2 min-w-[200px] text-neutral-dark"
             >
                 <nav>
                     <ul className="space-y-2">
+                        <MenuLink to={"/"} label="Home" onClose={onClose} />
                         <MenuLink to={`/profile/${user?.name}`} label="Profile" onClose={onClose} />
-                        <MenuLink to={`/profile/${user?.name}/bookings`} label="My Bookings" onClose={onClose} />
                         {isVenueManager && (
                             <MenuLink 
                                 to={`/profile/${user?.name}/venue-manager`} 

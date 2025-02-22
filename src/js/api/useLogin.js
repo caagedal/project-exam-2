@@ -33,7 +33,7 @@ const useLogin = () => {
                 email,
                 avatar,
                 banner,
-                token: `Bearer ${accessToken}`,
+                token: accessToken,
                 venueManager,
             };
 

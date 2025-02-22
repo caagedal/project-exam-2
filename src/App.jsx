@@ -5,7 +5,7 @@ import Home from "./components/pages/HomePage";
 // import VenuePage
 import Login from "./components/pages/Login";
 import Register from "./components/pages/register";
-import ProfilePage from "./components/pages/profile";
+import ProfilePage from "./components/pages/profile/profile";
 // import admin
 
 export default function App(){
