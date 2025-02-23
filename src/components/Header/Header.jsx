@@ -26,6 +26,7 @@ function Header() {
                     <img
                         src="/full-logo.svg"
                         alt="Holidaze logo"
+                        className="h-15"
                     />
                 </NavLink>
 

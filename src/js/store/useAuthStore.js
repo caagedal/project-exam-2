@@ -100,11 +100,16 @@ const useAuthStore = create(
                     user: state.user ? {...state.user, banner: newBanner} : null,
                 }));
             },
+            updateBio: (bio) => {
+                set((state) => ({
+                    user: state.user ? { ...state.user, bio } : null,
+                }));
+            },
         }),
         {
             name: "auth",
-        },
-    ),
+        }
+    )
 );
 
 export default useAuthStore;
