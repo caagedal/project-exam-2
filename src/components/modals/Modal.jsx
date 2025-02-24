@@ -15,7 +15,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       className="fixed inset-0 flex items-center justify-center bg-neutral-dark/50 z-50" 
       onClick={handleBackdropClick}
     >
-      <div className="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full m-4">
+      <div className="bg-white p-6 rounded-2xl shadow-lg max-w-screen-md w-full m-4">
         {children}
         <button 
           onClick={onClose} 
@@ -31,20 +31,3 @@ const Modal = ({ isOpen, onClose, children }) => {
 
 export default Modal;
 
-
-// const Modal = ({isOpen, onCLose, children}) => {
-//     if (!isOpen) return null;
-
-//     return (
-//         <div className="fixed inset-0 flex items-center justify-center bg-neutral-dark backdrop-opacity-10">
-//             <div className="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full">
-//                 {children}
-//                 <button onClick={onCLose} className="mt-4 p-2 text-text-dark">
-//                     Close
-//                 </button>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Modal;

@@ -20,8 +20,8 @@ function Header() {
     };
 
     return (
-        <header>
-            <div className="flex justify-between items-center max-w-7xl p-2 align-middle mx-auto text-neutral-dark">
+        <header className="bg-[var(--color-white)] ">
+            <div className="flex justify-between items-center max-w-screen-2xl p-4 align-middle mx-auto text-[var(--color-neutral-dark)]">
                 <NavLink to="/">
                     <img
                         src="/full-logo.svg"
@@ -32,10 +32,10 @@ function Header() {
 
                 {!isLoggedIn ? (
                     <div className="flex justify-center align-middle">
-                        <NavLink to="/register" className="text-neutral-dark px-4 py-2">
+                        <NavLink to="/register" className="text-[var(--color-neutral-dark)] px-4 py-2">
                             Sign up
                         </NavLink>
-                        <NavLink to="/login" className="bg-blue-600 text-white px-4 py-2 rounded bg-blue-main">
+                        <NavLink to="/login" className="bg-[var(--color-blue-main)] text-[var(--color-white)] px-4 py-2 rounded">
                             Login
                         </NavLink>
                     </div>
@@ -43,11 +43,11 @@ function Header() {
                     <div className="relative">
                         <button
                             onClick={handleMenuClick}
-                            className="flex items-center space-x-2 bg-gray-700 text-neutral-dark px-4 py-2 rounded"
+                            className="flex items-center space-x-2 bg-[var(--color-neutral-dark)] text-[var(--color-white)] px-4 py-2 rounded"
                             aria-label="Dropdown menu"
                             aria-expanded={isDropdownOpen}
                         >
-                            <Menu className="text-neutral-dark text-2xl" />
+                            <Menu className="text-[var(--color-white)] text-2xl" />
                         </button>
                         <DropdownMenu 
                             isOpen={isDropdownOpen}

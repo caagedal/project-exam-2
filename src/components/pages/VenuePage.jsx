@@ -1,180 +1,107 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import useAuthStore from "../../js/store/useAuthStore";
-import { BASE_URL, VENUES_URL, API_KEY } from "../../js/constants";
-import UpdateVenueModal from "../modals/UpdateVenueModal";
-import ImageCarouselModal from "../modals/ImageCarouselModal";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { MapPin } from "lucide-react";
+import { BASE_URL, VENUES_URL } from "../../js/constants";
+import Loader from "../Loader";
+import VenueGallery from "../Gallery/VenueGallery";
+import StarRating from "../StarRating";
+import Amenities from "../Amenities";
+import BookingForm from "../BookingForm";
+
 
 export default function VenuePage() {
-  const { id } = useParams();
-  const { user } = useAuthStore();
-  const [venue, setVenue] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [editOpen, setEditOpen] = useState(false);
-  const [carouselOpen, setCarouselOpen] = useState(false);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  let { venueID } = useParams();
 
   useEffect(() => {
-    const fetchVenue = async () => {
-      setLoading(true);
+    async function getData(url) {
       try {
-        const response = await fetch(
-          `${BASE_URL}${VENUES_URL}/${id}?_bookings=true&_owner=true`,  // ✅ Added `_owner=true`
-          {
-            headers: {
-              "X-Noroff-API-Key": API_KEY,
-            },
-          }
-        );
-  
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.errors?.[0]?.message || "Error fetching venue");
-        }
-  
+        setIsLoading(true);
+        setIsError(false);
+        const response = await fetch(url);
         const json = await response.json();
-        console.log("Fetched Venue Data:", json.data); // ✅ Debugging log
-        setVenue(json.data);
-      } catch (err) {
-        setError(err);
+        setData(json.data);
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
-    };
-  
-    fetchVenue();
-  }, [id]);
-  
+    }
+    getData(`${BASE_URL}${VENUES_URL}/${venueID}?_bookings=true`);
+  }, [venueID]);
 
-  // 🚨 Prevent error: Ensure `venue` exists before trying to access `venue.owner`
-  if (loading) return <p>Loading venue details...</p>;
-  if (error) return <p className="text-red-600">Error: {error.message}</p>;
-  if (!venue) return <p>Venue not found.</p>;
+  useEffect(() => {
+    if (data) {
+      document.title = `${data?.name} | Holidaze`;
+      const metaInfo = document.querySelector('meta[name="description"]');
+      const content = `Welcome to ${data?.name}.`;
+      if (metaInfo) {
+        metaInfo.setAttribute("content", content);
+      } else {
+        const meta = document.createElement("meta");
+        meta.name = "description";
+        meta.content = content;
+        document.head.appendChild(meta);
+      }
+    }
+  }, [data]);
 
-  // ✅ Now that `venue` is defined, check ownership safely
-  const isOwner = user && venue.owner && user.name === venue.owner.name;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
-  console.log("Logged-in User:", user);
-  console.log("Venue Owner:", venue.owner);
-  console.log("Is Owner?", isOwner);
+  if (isError || !data) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-[var(--color-warning)] font-semibold">
+        Error fetching venue!
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      {/* Venue Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-4xl font-bold">{venue.name}</h1>
-        {isOwner && (
-          <button
-            onClick={() => setEditOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-text-dark rounded"
-          >
-            Edit Venue
-          </button>
-        )}
-      </div>
+    <div className="max-w-7xl mx-auto p-6 space-y-12">
+      {/* Gallery */}
+      <VenueGallery images={data.media.map((img) => img.url)} />
 
-      {/* Image Gallery */}
-      <div className="mb-6">
-        {venue.media?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {venue.media.map((item, idx) => (
-              <img
-                key={idx}
-                src={item.url}
-                alt={item.alt || `Image ${idx + 1}`}
-                className="w-full h-64 object-cover rounded cursor-pointer"
-                onClick={() => {
-                  setCarouselIndex(idx);
-                  setCarouselOpen(true);
-                }}
-              />
-            ))}
+      {/* Venue Information & Booking */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {/* Left: Venue Details */}
+        <div className="md:col-span-2 space-y-6">
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold text-[var(--color-text-dark)]">{data.name}</h1>
+            <p className="flex items-center gap-2 text-[var(--color-neutral-medium)]">
+              <MapPin className="w-5 h-5" />
+              {data.location.country && data.location.city
+                ? `${data.location.country}, ${data.location.city}`
+                : "No location provided"}
+            </p>
+            <StarRating rating={data.rating} />
+            <p className="text-xl font-semibold text-[var(--color-blue-main)]">${data.price} / night</p>
           </div>
-        ) : (
-          <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-            <p>No images available</p>
+          <Amenities meta={data.meta} maxGuests={data.maxGuests} />
+
+          {/* Description */}
+          <div>
+            <h2 className="text-2xl font-semibold text-[var(--color-neutral-dark)]">Description</h2>
+            <p className="text-[var(--color-neutral-medium)] leading-relaxed">{data.description}</p>
           </div>
-        )}
+        </div>
+
+        {/* Right: Booking Form */}
+        <div className="w-full max-w-md p-6 bg-[var(--color-white)] shadow-lg rounded-lg border border-[var(--color-neutral-b)]">
+          <BookingForm bookings={data.bookings} venue={data} />
+        </div>
       </div>
-
-      {/* Venue Details */}
-      <div className="mb-6">
-        <p className="text-lg mb-2">{venue.description}</p>
-        <p className="text-lg font-semibold">Price: ${venue.price} per night</p>
-        <p className="text-lg font-semibold">Max Guests: {venue.maxGuests}</p>
-        <p className="text-lg font-semibold">Rating: {venue.rating} ★</p>
-      </div>
-
-      {/* Amenities */}
-      {venue.meta && (
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Amenities</h2>
-          <ul className="list-disc list-inside">
-            {venue.meta.wifi && <li>WiFi</li>}
-            {venue.meta.parking && <li>Parking</li>}
-            {venue.meta.breakfast && <li>Breakfast</li>}
-            {venue.meta.pets && <li>Pets Allowed</li>}
-          </ul>
-        </div>
-      )}
-
-      {/* Location */}
-      {venue.location && (
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Location</h2>
-          <p>
-            {venue.location.address ? `${venue.location.address}, ` : ""}
-            {venue.location.city ? `${venue.location.city}, ` : ""}
-            {venue.location.zip ? `${venue.location.zip}, ` : ""}
-            {venue.location.country ? `${venue.location.country}` : ""}
-          </p>
-          {venue.location.continent && <p>Continent: {venue.location.continent}</p>}
-        </div>
-      )}
-
-      {/* Book Now Button */}
-      {!isOwner && user && (
-        <div className="mb-6">
-          <Link to={`/venues/${venue.id}/book`} className="px-4 py-2 bg-green-600 text-white rounded">
-            Book Now
-          </Link>
-        </div>
-      )}
-
-      {/* Bookings for Venue Owner */}
-      {isOwner && venue.bookings?.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-2">Bookings</h2>
-          <ul className="list-disc list-inside">
-            {venue.bookings.map((booking) => (
-              <li key={booking.id}>
-                {new Date(booking.dateFrom).toLocaleDateString()} –{" "}
-                {new Date(booking.dateTo).toLocaleDateString()} for {booking.guests} guest(s)
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Edit Venue Modal */}
-      {isOwner && editOpen && (
-        <UpdateVenueModal
-          isOpen={editOpen}
-          onClose={() => setEditOpen(false)}
-          venue={venue}
-        />
-      )}
-
-      {/* Image Carousel Modal */}
-      {carouselOpen && (
-        <ImageCarouselModal
-          isOpen={carouselOpen}
-          onClose={() => setCarouselOpen(false)}
-          images={venue.media}
-          initialIndex={carouselIndex}
-        />
-      )}
     </div>
   );
 }
+
+
+

@@ -7,6 +7,8 @@ import Register from "./components/pages/register";
 import ProfilePage from "./components/pages/profile/profile";
 import VenueManagerDashboard from "./components/pages/venueManager/VenueManagerDashboard";
 
+// import "react-datepicker/dist/react-datepicker.css";
+
 export default function App() {
   return (
     <Routes>
@@ -15,7 +17,7 @@ export default function App() {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="profile/:username" element={<ProfilePage />} />
-      <Route path="venues/:id" element={<VenuePage />} />
+      <Route path="venues/:venueID" element={<VenuePage />} />
       <Route path="profile/:username/venue-manager" element={<VenueManagerDashboard />} />
       </Route>
 

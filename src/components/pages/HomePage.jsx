@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import useVenues from "../../js/api/useVenues";
+import VenueCard from "../VenueCard";
+
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -68,19 +70,22 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-neutral-dark">
+    <div className="min-h-screen text-neutral-dark mx-auto flex flex-col">
       {/* Hero Section */}
       <div className="relative">
-        <div className="relative bg-gradient-to-b from-black/50 to-black/20">
+        <div className="relative">
           <img
             src="https://images.unsplash.com/photo-1638297184082-bd7fe6081c82?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3"
             alt="Beautiful destination"
-            className="w-full h-[600px] object-cover"
+            className="w-full h-[600px] object-cover "
           />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0  " />
+          
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="max-w-4xl mx-auto px-4 text-center text-white">
-              <h1 className="text-5xl font-bold mb-6">Find your perfect stay</h1>
-              <p className="text-xl mb-8">
+            <div className=" max-w-4xl mx-auto px-8 py-12 text-center text-white  rounded-xl ">
+              <h1 className="text-5xl font-bold mb-6 shadow-blue-main">Find your perfect stay</h1>
+              <p className="text-xl mb-8  ">
                 Discover unique places to stay around the world
               </p>
             </div>
@@ -103,7 +108,7 @@ export default function Home() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
                 >
                   Search
                 </button>
@@ -114,29 +119,8 @@ export default function Home() {
       </div>
 
       {/* Venues List Section */}
-      <div className="mt-32 max-w-7xl mx-auto p-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold">All Venues</h2>
-          {/* Sort Dropdown */}
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <select
-              value={sortOption}
-              onChange={(e) => {
-                setSortOption(e.target.value);
-                setPage(1); // reset page on new sort option
-              }}
-              className="px-4 py-2 border rounded"
-            >
-              <option value="newest">Newest (New to Old)</option>
-              <option value="name-asc">Name A-Z</option>
-              <option value="name-desc">Name Z-A</option>
-              <option value="price-asc">Price Low to High</option>
-              <option value="price-desc">Price High to Low</option>
-              <option value="stars-asc">Stars Low to High</option>
-              <option value="stars-desc">Stars High to Low</option>
-            </select>
-          </div>
-        </div>
+      <div className="mt-32 p-4">
+        
 
         {loading && <p>Loading venues...</p>}
         {error && (
@@ -149,48 +133,9 @@ export default function Home() {
 
         {!loading && !error && venues.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {venues.map((venue) => (
-                <div
-                  key={venue.id}
-                  className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  {venue.media?.[0]?.url ? (
-                    <img
-                      src={venue.media[0].url}
-                      alt={venue.media[0].alt || "Venue image"}
-                      className="w-full h-48 object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-neutral-light flex items-center justify-center text-neutral-medium">
-                      No image available
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold">{venue.name}</h3>
-                    {venue.location && (
-                      <p className="text-sm text-neutral-medium">
-                        {venue.location.city}, {venue.location.country}
-                      </p>
-                    )}
-                    {venue.price !== undefined && (
-                      <p className="text-sm text-neutral-medium">
-                        Price: ${venue.price} per night
-                      </p>
-                    )}
-                    {venue.rating !== undefined && (
-                      <p className="text-sm text-neutral-medium">
-                        Rating: {venue.rating} ★
-                      </p>
-                    )}
-                    <Link
-                      to={`/venues/${venue.id}`}
-                      className="inline-block mt-2 text-blue-main underline"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </div>
+                <VenueCard key={venue.id} venue={venue} />
               ))}
             </div>
 
