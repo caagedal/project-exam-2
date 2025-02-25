@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import useVenues from "../../js/api/useVenues";
 import VenueCard from "../VenueCard";
-
+import Loader from "../Loader";
+import { getSortParams } from "../../js/utils/sortUtils";
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -11,44 +12,9 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState(""); // input field state
   const [searchQuery, setSearchQuery] = useState(""); // actual query passed to API
   const [sortOption, setSortOption] = useState("newest"); // default: newest
+  const [isSearchPerformed, setIsSearchPerformed] = useState(false); // track if search is performed
 
-  // Map sortOption to API parameters.
-  let sortField = "created";
-  let sortOrder = "desc";
-  switch (sortOption) {
-    case "newest":
-      sortField = "created";
-      sortOrder = "desc";
-      break;
-    case "name-asc":
-      sortField = "name";
-      sortOrder = "asc";
-      break;
-    case "name-desc":
-      sortField = "name";
-      sortOrder = "desc";
-      break;
-    case "price-asc":
-      sortField = "price";
-      sortOrder = "asc";
-      break;
-    case "price-desc":
-      sortField = "price";
-      sortOrder = "desc";
-      break;
-    case "stars-asc":
-      sortField = "rating";
-      sortOrder = "asc";
-      break;
-    case "stars-desc":
-      sortField = "rating";
-      sortOrder = "desc";
-      break;
-    default:
-      sortField = "created";
-      sortOrder = "desc";
-      break;
-  }
+  const { sortField, sortOrder } = getSortParams(sortOption);
 
   // Get venues from API using our hook.
   const { venues, loading, error, meta } = useVenues(
@@ -60,14 +26,31 @@ export default function Home() {
   );
 
   // Calculate total pages from meta (if available) or default.
-  const totalPages = meta.pageCount || 1;
+  const totalPages = meta?.pageCount || 1;
 
   // Handle search submission: update the search query and reset page.
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchQuery(searchTerm);
     setPage(1);
+    setIsSearchPerformed(true);
   };
+
+  // Handle clearing the search input and results
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setSearchQuery("");
+    setPage(1);
+    setIsSearchPerformed(false);
+  };
+
+  // Reset search results when the component mounts
+  useEffect(() => {
+    setSearchTerm("");
+    setSearchQuery("");
+    setPage(1);
+    setIsSearchPerformed(false);
+  }, []);
 
   return (
     <div className="min-h-screen text-neutral-dark mx-auto flex flex-col">
@@ -106,12 +89,22 @@ export default function Home() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
-                >
-                  Search
-                </button>
+                {isSearchPerformed ? (
+                  <button
+                    type="button"
+                    onClick={handleClearSearch}
+                    className="bg-red-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-red-700 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="bg-blue-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
+                  >
+                    Search
+                  </button>
+                )}
               </form>
             </div>
           </div>
@@ -120,12 +113,16 @@ export default function Home() {
 
       {/* Venues List Section */}
       <div className="mt-32 p-4">
-        
-
-        {loading && <p>Loading venues...</p>}
+        {loading && <Loader />}
         {error && (
           <div className="text-warning p-4 rounded-lg bg-warning/10">
             <p>Error: {error.message}</p>
+            <button
+              onClick={() => setPage(1)}
+              className="mt-4 px-4 py-2 bg-blue-main text-white rounded"
+            >
+              Retry
+            </button>
           </div>
         )}
 
@@ -143,7 +140,7 @@ export default function Home() {
             <div className="mt-8 flex justify-center items-center space-x-4">
               <button
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                disabled={page === 1}
+                disabled={page === 1 || loading}
                 className="px-4 py-2 bg-blue-main text-white rounded disabled:opacity-50"
               >
                 Previous
@@ -155,7 +152,7 @@ export default function Home() {
                 onClick={() =>
                   setPage((prev) => (prev < totalPages ? prev + 1 : prev))
                 }
-                disabled={page === totalPages}
+                disabled={page === totalPages || loading}
                 className="px-4 py-2 bg-blue-main text-white rounded disabled:opacity-50"
               >
                 Next

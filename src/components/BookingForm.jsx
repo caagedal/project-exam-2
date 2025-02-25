@@ -4,13 +4,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
 
 import useAuthStore from "../js/store/useAuthStore";
 import useBookings from "../js/api/useBookings";
 import Modal from "./modals/Modal";
 import { BASE_URL, BOOKINGS_URL, API_KEY } from "../js/constants";
-
-
 
 const BookingForm = ({ bookings, venue }) => {
   const { token, isLoggedIn, user } = useAuthStore();
@@ -90,30 +89,18 @@ const BookingForm = ({ bookings, venue }) => {
       setMessage("You must be logged in to book.");
       return;
     }
-    
-    // Prevent venue owners from even opening the modal
-    if (isVenueOwner) {
-      setMessage("You cannot book your own venue.");
-      return;
-    }
-  
+
     if (!startDate || !endDate) {
       setMessage("Please select check-in and check-out dates.");
       return;
     }
-    
+
     setModalOpen(true);
   };
-  
 
   const handleConfirmBooking = async () => {
     if (!token) {
       setMessage("You must be logged in to book.");
-      return;
-    }
-
-    if (isVenueOwner) {
-      setMessage("You cannot book your own venue.");
       return;
     }
 
@@ -143,7 +130,7 @@ const BookingForm = ({ bookings, venue }) => {
 
       setMessage("Booking successful! 🎉");
       setModalOpen(false);
-      
+
       // Reset form
       setValue("startDate", null);
       setValue("endDate", null);
@@ -154,16 +141,6 @@ const BookingForm = ({ bookings, venue }) => {
       setLoading(false);
     }
   };
-
-  // If user is the venue owner, show a message instead of the booking form
-  if (isVenueOwner) {
-    return (
-      <div className="bg-neutral-light p-6 rounded-lg text-center">
-        <p className="text-neutral-dark font-medium">This is your venue</p>
-        <p className="text-neutral-medium text-sm mt-2">You cannot book your own venue</p>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white p-6 rounded-lg flex flex-col align-middle text-ce">
@@ -227,11 +204,9 @@ const BookingForm = ({ bookings, venue }) => {
           </p>
         )}
 
-        
-
         <button
           onClick={handleOpenModal}
-          disabled={loading || !isLoggedIn || isVenueOwner}
+          disabled={loading || !isLoggedIn}
           className="w-full py-3 bg-green text-white rounded-lg hover:bg-green/90 transition-colors disabled:opacity-50"
         >
           {loading ? "Processing..." : "Book Now"}
@@ -243,8 +218,6 @@ const BookingForm = ({ bookings, venue }) => {
           </p>
         )}
       </form>
-
-      
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
         <h2 className="text-xl font-bold text-neutral-dark text-center">

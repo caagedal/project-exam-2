@@ -8,7 +8,6 @@ import StarRating from "../StarRating";
 import Amenities from "../Amenities";
 import BookingForm from "../BookingForm";
 
-
 export default function VenuePage() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +29,7 @@ export default function VenuePage() {
         setIsLoading(false);
       }
     }
-    getData(`${BASE_URL}${VENUES_URL}/${venueID}?_bookings=true`);
+    getData(`${BASE_URL}${VENUES_URL}/${venueID}?_bookings=true&_owner=true`);
   }, [venueID]);
 
   useEffect(() => {
@@ -102,6 +101,3 @@ export default function VenuePage() {
     </div>
   );
 }
-
-
-

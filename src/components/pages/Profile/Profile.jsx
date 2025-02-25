@@ -1,14 +1,20 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import useAuthStore from "../../../js/store/useAuthStore";
-import { Loader, Upload} from "lucide-react";
+import { Loader, Upload } from "lucide-react";
 import useBookings from "../../../js/api/useBookings";
-import BookingCard from "./bookingCard";
+import BookingCard from "./BookingCard";
 import UpdateProfileModal from "../../modals/EditProfile";
 
 const ProfilePage = () => {
   const { user } = useAuthStore();
-  const { bookings, loading, error } = useBookings();
+  const { bookings, loading, error, setBookings } = useBookings();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCancelBooking = (bookingId) => {
+    setBookings((prevBookings) => prevBookings.filter((booking) => booking.id !== bookingId));
+    // Reload the page to fetch updated bookings
+    window.location.reload();
+  };
 
   if (!user) {
     return (
@@ -24,7 +30,7 @@ const ProfilePage = () => {
       <div className="relative h-48 rounded-2xl overflow-hidden bg-neutral-light">
         <img
           src={user.banner?.url || "/api/placeholder/1200/300"}
-          alt={`${user.name}'s banner` || "Profile banner"}
+          alt={user.banner?.alt || "Profile banner"}
           className="w-full h-full object-cover"
         />
       </div>
@@ -42,12 +48,10 @@ const ProfilePage = () => {
           <div className="sm:mb-1">
             <h1 className="text-2xl font-bold text-text-dark">{user.name}</h1>
             <p className="text-neutral-medium">{user.email}</p>
-            
           </div>
-          
         </div>
-        <button 
-          onClick={() => setIsModalOpen(true)} 
+        <button
+          onClick={() => setIsModalOpen(true)}
           className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-main text-white rounded-2xl hover:bg-blue-main/90 transition-colors sm:mb-1"
         >
           <Upload size={16} />
@@ -59,7 +63,7 @@ const ProfilePage = () => {
       {/* Bookings Section */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 text-text-dark">My Bookings</h2>
-        
+
         {loading && (
           <div className="flex justify-center">
             <Loader className="animate-spin text-blue-main" />
@@ -79,7 +83,7 @@ const ProfilePage = () => {
         {!loading && !error && bookings && bookings.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {bookings.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} />
+              <BookingCard key={booking.id} booking={booking} onCancel={handleCancelBooking} />
             ))}
           </div>
         )}

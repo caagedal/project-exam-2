@@ -3,13 +3,13 @@ import useAuthStore from "../store/useAuthStore";
 import { API_KEY, BASE_URL, PROFILES_URL } from "../constants";
 
 export default function useBookings() {
-    const {user, token} = useAuthStore();
+    const { user, token } = useAuthStore();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!user || !token){
+        if (!user || !token) {
             setLoading(false);
             return;
         }
@@ -34,11 +34,11 @@ export default function useBookings() {
                 const data = await response.json();
                 const unsortedBookings = data.data.bookings || [];
                 const sortedBookings = unsortedBookings.sort(
-                    (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom),
+                    (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom)
                 );
 
                 setBookings(sortedBookings);
-            } catch(err) {
+            } catch (err) {
                 setError(err);
                 console.error(err);
             } finally {
@@ -48,5 +48,5 @@ export default function useBookings() {
         fetchBooking();
     }, [user, token]);
 
-    return {bookings, loading, error};
+    return { bookings, loading, error, setBookings };
 }
