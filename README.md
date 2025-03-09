@@ -22,7 +22,7 @@ You can list a the tech stack that you've used over here
 
 ## Live demo
 
-[Link to live demo (not really functional)] (https://snazzy-strudel-e16a63.netlify.app/)
+[Link to live demo (not really functional)](https://snazzy-strudel-e16a63.netlify.app/)
 
 ### Installing
 
