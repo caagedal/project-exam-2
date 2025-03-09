@@ -32,21 +32,7 @@ export default function VenuePage() {
     getData(`${BASE_URL}${VENUES_URL}/${venueID}?_bookings=true&_owner=true`);
   }, [venueID]);
 
-  useEffect(() => {
-    if (data) {
-      document.title = `${data?.name} | Holidaze`;
-      const metaInfo = document.querySelector('meta[name="description"]');
-      const content = `Welcome to ${data?.name}.`;
-      if (metaInfo) {
-        metaInfo.setAttribute("content", content);
-      } else {
-        const meta = document.createElement("meta");
-        meta.name = "description";
-        meta.content = content;
-        document.head.appendChild(meta);
-      }
-    }
-  }, [data]);
+ 
 
   if (isLoading) {
     return (

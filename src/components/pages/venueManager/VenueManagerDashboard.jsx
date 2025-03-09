@@ -3,12 +3,14 @@ import useManagerVenues from "../../../js/api/useManagerVenues";
 import useAuthStore from "../../../js/store/useAuthStore";
 import { BASE_URL, VENUES_URL, API_KEY } from "../../../js/constants";
 import UpdateVenueModal from "../../modals/UpdateVenueModal";
-import { Pencil, Trash2, Eye } from "lucide-react";
+import CreateVenueModal from "../../modals/CreateVenueModal";
+import { Pencil, Trash2, Eye, Plus } from "lucide-react";
 
 export default function VenueManagerDashboard() {
   const { venues, loading, error } = useManagerVenues();
   const { token } = useAuthStore();
   const [editingVenue, setEditingVenue] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
   const handleDelete = async (venueId) => {
     if (!window.confirm("Are you sure you want to delete this venue?")) return;
@@ -29,10 +31,18 @@ export default function VenueManagerDashboard() {
       alert(err.message);
     }
   };
-
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-neutral-dark">Your Venues</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-neutral-dark">Your Venues</h1>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-main text-white rounded hover:bg-blue-600 transition"
+        >
+          <Plus size={16} />
+          Create Venue
+        </button>
+      </div>
       
       {loading && <p className="text-neutral-medium">Loading your venues...</p>}
       {error && <p className="text-warning">Error: {error.message}</p>}
@@ -45,7 +55,7 @@ export default function VenueManagerDashboard() {
           {venues.map((venue) => (
             <div
               key={venue.id}
-              className="border rounded-lg bg-white shadow-md overflow-hidden"
+              className="border-b-neutral-medium rounded-lg bg-white shadow-md overflow-hidden"
             >
               {/* Venue Image */}
               <div className="aspect-video relative">
@@ -70,7 +80,7 @@ export default function VenueManagerDashboard() {
                 <p className="text-sm text-neutral-medium line-clamp-2">
                   {venue.description}
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                   <p className="text-blue-main font-medium">
                     ${venue.price}/night
                   </p>
@@ -82,24 +92,24 @@ export default function VenueManagerDashboard() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 pt-2">
+                <div className="flex flex-col sm:flex-row gap-2 pt-2">
                   <button
                     onClick={() => window.location.assign(`/venues/${venue.id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-main text-white rounded hover:bg-blue-600 transition"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-main text-white rounded hover:bg-blue-main/90 transition"
                   >
                     <Eye size={16} />
                     View
                   </button>
                   <button
                     onClick={() => setEditingVenue(venue)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green text-white rounded hover:bg-green/90 transition"
+                    className=" flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green text-white rounded hover:bg-green/90 transition"
                   >
                     <Pencil size={16} />
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(venue.id)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-warning text-white rounded hover:bg-red-700 transition"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-warning text-white rounded hover:bg-warning/90 transition"
                   >
                     <Trash2 size={16} />
                     Delete
@@ -110,6 +120,16 @@ export default function VenueManagerDashboard() {
           ))}
         </div>
       )}
+
+      {/* Create Modal */}
+      <CreateVenueModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreated={() => {
+          // Refresh your venues list here
+          window.location.reload();
+        }}
+      />
 
       {/* Edit Modal */}
       {editingVenue && (
