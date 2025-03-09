@@ -1,6 +1,6 @@
 # Holidaze
 
-![image](https://user-images.githubusercontent.com/52622303/164316813-4b12d99f-aeb7-4069-85cf-e72b3a50ac99.png)
+![image](/public/holidaze-screenshot.png)
 
 This was supposed to be my submission for project exam 2, I was unfortunately unable to finish it so this serves as a placeholder for the portfolio 2 course assignment.
 
