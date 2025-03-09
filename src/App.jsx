@@ -4,7 +4,7 @@ import Home from "./components/pages/HomePage";
 import VenuePage from "./components/pages/VenuePage";
 import Login from "./components/pages/Login";
 import Register from "./components/pages/register";
-import ProfilePage from "./components/pages/profile/Profile";
+import ProfilePage from "./components/pages/Profile/Profile";
 import VenueManagerDashboard from "./components/pages/venueManager/VenueManagerDashboard";
 
 
