@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
-import { Link } from "react-router-dom";
 import useVenues from "../../js/api/useVenues";
 import VenueCard from "../VenueCard";
 import Loader from "../Loader";
@@ -53,24 +52,22 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen text-neutral-dark mx-auto flex flex-col">
+    <div className="min-h-screen text-neutral-dark mx-auto flex flex-col p-4">
       {/* Hero Section */}
       <div className="relative">
         <div className="relative">
           <img
             src="https://images.unsplash.com/photo-1638297184082-bd7fe6081c82?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3"
             alt="Beautiful destination"
-            className="w-full h-[600px] object-cover "
+            className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover"
           />
           {/* Gradient overlay */}
-          <div className="absolute inset-0  " />
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
           
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className=" max-w-4xl mx-auto px-8 py-12 text-center text-white  rounded-xl ">
-              <h1 className="text-5xl font-bold mb-6 shadow-blue-main">Find your perfect stay</h1>
-              <p className="text-xl mb-8  ">
-                Discover unique places to stay around the world
-              </p>
+            <div className="max-w-4xl mx-auto px-4 sm:px-8 py-6 sm:py-12 text-center text-white rounded-xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 shadow-blue-main">Find your perfect stay</h1>
+              <p className="text-lg sm:text-xl mb-6 sm:mb-8">Discover unique places to stay around the world</p>
             </div>
           </div>
         </div>
@@ -93,7 +90,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={handleClearSearch}
-                    className="bg-red-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-red-700 transition-colors"
+                    className="bg-red-600 text-neutral-dark px-4 sm:px-8 py-2 sm:py-3 rounded-full hover:bg-red-700 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -112,7 +109,7 @@ export default function Home() {
       </div>
 
       {/* Venues List Section */}
-      <div className="mt-32 p-4">
+      <div className="mt-20 sm:mt-32 p-4">
         {loading && <Loader />}
         {error && (
           <div className="text-warning p-4 rounded-lg bg-warning/10">
