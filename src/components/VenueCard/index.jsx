@@ -18,9 +18,9 @@ const VenueCard = ({ venue }) => {
           />
         ) : (
           <img
-            src="/api/placeholder/240/200"
+            src="/full-logo.svg"
             alt={venue.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain p-2"
           />
         )}
       </div>

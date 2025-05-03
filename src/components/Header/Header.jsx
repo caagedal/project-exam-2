@@ -21,7 +21,7 @@ function Header() {
 
     return (
         <header className="bg-[var(--color-white)] ">
-            <div className="flex justify-between items-center max-w-screen-2xl p-4 align-middle mx-auto text-[var(--color-neutral-dark)]">
+            <div className="flex justify-between items-center max-w-screen-2xl py-4 xl:px-0 px-4 align-middle mx-auto text-[var(--color-neutral-dark)]">
                 <NavLink to="/">
                     <img
                         src="/full-logo.svg"

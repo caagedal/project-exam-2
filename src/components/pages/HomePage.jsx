@@ -76,15 +76,15 @@ export default function Home() {
         </div>
         {/* Search Bar */}
         <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-16 w-full max-w-6xl">
-          <div className="mx-4 bg-blue-main rounded-lg shadow-xl py-12 px-20">
+          <div className="mx-4 bg-blue-main rounded-lg shadow-xl md:py-12 md:px-20 p-5">
             <div className="bg-white rounded-2xl shadow-lg p-2 flex items-center">
               <form onSubmit={handleSearch} className="flex items-center w-full">
-                <div className="flex-1 flex items-center px-4">
-                  <Search className="w-5 h-5 text-gray-400" />
+                <div className="flex-1 flex items-center px-2">
+                  
                   <input
                     type="text"
                     placeholder="Search venues..."
-                    className="w-full px-4 py-2 focus:outline-none"
+                    className="w-full px-2 py-2 focus:outline-none text-sm lg:text-lg"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -100,9 +100,9 @@ export default function Home() {
                 ) : (
                   <button
                     type="submit"
-                    className="bg-blue-600 text-neutral-dark px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 text-neutral-dark px-4 py-3 rounded-full hover:bg-blue-700 transition-colors"
                   >
-                    Search
+                    <Search className="w-5 h-5 text-gray-400" />
                   </button>
                 )}
               </form>
@@ -130,7 +130,7 @@ export default function Home() {
 
         {!loading && !error && venues.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex flex-wrap mx-auto justify-center lg:justify-between lg:gap-4 flex-wrap gap-10">
               {venues.map((venue) => (
                 <VenueCard key={venue.id} venue={venue} />
               ))}
