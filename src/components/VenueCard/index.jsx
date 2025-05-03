@@ -3,7 +3,7 @@ import { MapPin, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const VenueCard = ({ venue }) => {
-  const placeholderImage = "/full-logo.svg"; // Ensure this path is correct and points to the placeholder image in the public directory
+ 
 
   return (
     <Link 

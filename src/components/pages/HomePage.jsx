@@ -127,7 +127,7 @@ export default function Home() {
 
         {!loading && !error && venues.length > 0 && (
           <>
-            <div className="flex flex-wrap mx-auto justify-center lg:justify-between lg:gap-4 flex-wrap gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {venues.map((venue) => (
                 <VenueCard key={venue.id} venue={venue} />
               ))}
