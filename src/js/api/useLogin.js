@@ -1,56 +1,68 @@
-import { useState } from "react";
-import { BASE_URL, LOGIN_URL, API_KEY } from "../constants";
+import { useState } from 'react';
+import { BASE_URL, LOGIN_URL, API_KEY } from '../constants';
 
-const useLogin = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+/**
+ * Custom hook for handling user login via API.
+ * Provides login function and loading/error state.
+ *
+ * @returns {{
+ *   login: (email: string, password: string) => Promise<{ name: string, email: string, avatar: string, banner: string, token: string, venueManager: boolean }>;
+ *   loading: boolean;
+ *   error: string|null;
+ * }}
+ */
+export default function useLogin() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const login = async (mailAddress, password) => {
-        setLoading(true);
-        setError(null);
+  /**
+   * Performs user login request.
+   * @param {string} email - User email address.
+   * @param {string} password - User password.
+   * @returns {Promise<Object>} Resolves to user data on success.
+   * @throws {Error} Throws if login fails.
+   */
+  async function login(email, password) {
+    setLoading(true);
+    setError(null);
 
-        try {
-            const response = await fetch(`${BASE_URL}${LOGIN_URL}?_holidaze=true`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Noroff-API-Key": API_KEY,
-                },
-                body: JSON.stringify({ email: mailAddress, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                const errorMessage = data?.errors?.length ? data.errors[0].message : "Login failed";
-                throw new Error(errorMessage);
-            }
-
-            const { name, email, avatar, banner, accessToken, venueManager } = data.data;
-
-            const user = {
-                name,
-                email,
-                avatar,
-                banner,
-                token: accessToken,
-                venueManager,
-            };
-
-            return user;
-        } catch (error) {
-            setError(error.message);
-            throw error;
-        } finally {
-            setLoading(false);
+    try {
+      const response = await fetch(
+        `${BASE_URL}${LOGIN_URL}?_holidaze=true`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Noroff-API-Key': API_KEY,
+          },
+          body: JSON.stringify({ email, password }),
         }
-    };
+      );
 
-    return {
-        login,
-        loading,
-        error
-    };
-};
+      const result = await response.json();
 
-export default useLogin;
+      if (!response.ok) {
+        const message = result.errors?.[0]?.message || 'Login failed';
+        throw new Error(message);
+      }
+
+      const { name, email: userEmail, avatar, banner, accessToken, venueManager } = result.data;
+
+      return {
+        name,
+        email: userEmail,
+        avatar,
+        banner,
+        token: accessToken,
+        venueManager,
+      };
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { login, loading, error };
+}

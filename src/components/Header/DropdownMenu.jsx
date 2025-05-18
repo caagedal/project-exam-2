@@ -1,46 +1,65 @@
-import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import MenuLink from "./MenuLink";
-import useAuthStore from "../../js/store/useAuthStore";
+import React, { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MenuLink from './MenuLink';
+import useAuthStore from '../../js/store/useAuthStore';
 
 /**
- * DropdownMenu component
- * 
- * @component
- * @param {boolean} isOpen - Is the dropdown open?
- * @param {Function} onClose - Function to close dropdown
+ * Props for DropdownMenu component.
+ *
+ * @typedef {Object} DropdownMenuProps
+ * @property {boolean} isOpen - Indicates whether the dropdown is open.
+ * @property {() => void} onClose - Callback to close the dropdown.
  */
-export default function DropdownMenu({ isOpen, onClose }) {
+
+/**
+ * Renders a dropdown menu with navigation links and logout functionality.
+ *
+ * @param {DropdownMenuProps} props - Component props.
+ * @returns {JSX.Element|null} The dropdown menu element or null if closed.
+ */
+function DropdownMenu({ isOpen, onClose }) {
   const { user, isVenueManager, logout } = useAuthStore();
   const menuRef = useRef(null);
   const navigate = useNavigate();
 
-  // Close when clicking outside
   useEffect(() => {
+    /**
+     * Handles clicks outside the menu to close it.
+     *
+     * @param {MouseEvent} event - The mouse event.
+     */
     function handleClickOutside(event) {
-      const isToggleButton = event
-        .target.closest('button[aria-label="Dropdown menu"]');
+      const toggleButton = event.target.closest('button[aria-label="Dropdown menu"]');
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target) &&
-        !isToggleButton
+        !toggleButton
       ) {
         onClose();
       }
     }
-    if (isOpen) document.addEventListener("mousedown", handleClickOutside);
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen, onClose]);
 
-  const handleLogout = () => {
-    logout();        // Clear auth state
-    onClose();       // Close the dropdown
-    navigate("/");   // Redirect to home page
-  };
+  /**
+   * Logs out the user, closes the menu, and redirects to home.
+   */
+  function handleLogout() {
+    logout();
+    onClose();
+    navigate('/');
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div
@@ -71,3 +90,5 @@ export default function DropdownMenu({ isOpen, onClose }) {
     </div>
   );
 }
+
+export default DropdownMenu;

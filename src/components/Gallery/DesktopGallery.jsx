@@ -1,24 +1,39 @@
-import React, { useState } from "react";
-import ImageComponent from "./ImageComponent/ImageComponent";
+import React, { useState } from 'react';
+import ImageComponent from './ImageComponent/ImageComponent';
+import Modal from '../modals/Modal';
 
-import Modal from "../modals/Modal";
+/**
+ * Props for the DesktopGallery component.
+ *
+ * @typedef {Object} DesktopGalleryProps
+ * @property {string[]} images - Array of image URLs to display.
+ */
 
+/**
+ * DesktopGallery displays a responsive image gallery for larger screens.
+ * It shows a main image and optional thumbnails. Clicking an image opens it in a modal.
+ *
+ * @param {DesktopGalleryProps} props - Component props.
+ * @returns {JSX.Element} The gallery element for desktop view.
+ */
 const DesktopGallery = ({ images }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const mainImage = images[0] || '';
+  const hasThumbnails = images.length > 1;
 
   return (
     <>
       <div className="hidden md:flex gap-4">
-        <div className={`${images.length > 1 ? "w-2/3" : "w-full"}`}>
+        <div className={hasThumbnails ? 'w-2/3' : 'w-full'}>
           <ImageComponent
-            src={images[0]}
-            alt="Main Venue"
+            src={mainImage}
+            alt="Main venue"
             className="w-full h-[400px] object-cover rounded-xl shadow-lg"
-            onClick={() => setSelectedImage(images[0])} // Open modal only on click
+            onClick={() => setSelectedImage(mainImage)}
           />
         </div>
 
-        {images.length > 1 && (
+        {hasThumbnails && (
           <div className="w-1/3 flex flex-col gap-2">
             {images.slice(1).map((img, index) => (
               <ImageComponent
@@ -33,15 +48,17 @@ const DesktopGallery = ({ images }) => {
         )}
       </div>
 
-      {/* Modal should only open when an image is clicked */}
       {selectedImage && (
-        <Modal isOpen={!!selectedImage} onClose={() => setSelectedImage(null)}>
-          <img src={selectedImage} alt="Full Size" className="w-full rounded-md" />
+        <Modal isOpen onClose={() => setSelectedImage(null)}>
+          <img
+            src={selectedImage}
+            alt="Full size"
+            className="w-full rounded-md"
+          />
         </Modal>
       )}
     </>
   );
 };
 
-  
-  export default DesktopGallery;
+export default DesktopGallery;
