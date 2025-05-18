@@ -12,7 +12,6 @@ const schema = yup.object({
   description: yup.string().required("Description is required"),
   price: yup.number().positive().required("Price must be positive"),
   maxGuests: yup.number().integer().min(1).required("At least 1 guest is required"),
-  rating: yup.number().min(0).max(5, "Rating must be between 0 and 5"),
   media: yup.array().of(
     yup.object({
       url: yup.string().url("Invalid image URL").required("Image URL is required"),
@@ -52,7 +51,6 @@ export default function CreateVenueModal({ isOpen, onClose, onCreated }) {
       description: "",
       price: "",
       maxGuests: "",
-      rating: "",
       media: [{ url: "", alt: "" }],
       location: {
         address: "",
