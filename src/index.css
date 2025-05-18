@@ -12,12 +12,14 @@
   --color-white: #fff;
   --color-yellow: #FFC107;
   --color-green: #28A745;
+  --color-green-light: #DBFFE4;
   --color-neutral-dark: #343A40;
   --color-neutral-medium: #757575;
   --color-neutral-light: #ECECEC;
   --color-neutral-b: #D9D9D9;
   --color-gray-overlay: #6b7280;
   --color-warning: #C33737;
+  --color-warning-light: #FFD7D7;
   --color-text-dark: #1E1E1E;
   
 
@@ -44,6 +46,14 @@ h2{
 
 p{
   
+}
+
+button{
+  cursor: pointer;
+}
+
+a{
+  cursor: pointer;
 }
 
 .loader {

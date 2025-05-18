@@ -15,23 +15,4 @@ export default function MenuLink({ to, label, onClose }) {
 }
 
 
-// import { NavLink } from "react-router-dom";
-
-// export default function MenuLink({to, label, onClose}) {
-//     const handleClick = () => {
-//         onClose();
-//     };
-
-//     return(
-//         <li className="">
-//             <NavLink
-//                 to={`/${to}`}
-//                 onClick={handleClick}
-//                 className=""
-//             >
-//                 {label}
-//             </NavLink>
-//         </li>
-//     );
-// }
 

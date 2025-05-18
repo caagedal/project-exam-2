@@ -199,7 +199,13 @@ const BookingForm = ({ bookings, venue }) => {
         </div>
 
         {message && (
-          <p className="text-warning text-sm text-center bg-warning/10 p-2 rounded">
+          <p
+            className={`mt-2 text-sm text-center p-2 rounded ${
+              message.toLowerCase().includes("successful")
+                ? "text-green bg-green-light"
+                : "text-warning bg-warning-light"
+            }`}
+          >
             {message}
           </p>
         )}

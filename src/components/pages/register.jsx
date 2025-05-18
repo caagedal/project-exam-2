@@ -1,4 +1,5 @@
-import React from "react";
+// src/components/pages/auth/Register.jsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,137 +8,204 @@ import useRegister from "../../js/api/useRegister";
 import { registerSchema } from "../../js/validate/registerSchema";
 
 export default function Register() {
-    const navigate = useNavigate();
-    const { register: registerUser, loading, error } = useRegister();
-    const { login: loginStore } = useAuthStore();
+  const navigate = useNavigate();
+  const { register: registerUser, loading, error: apiError } = useRegister();
+  const { login: loginStore } = useAuthStore();
+  const [error, setError] = useState(null);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(registerSchema),
-        defaultValues: {
-            name: "",
-            email: "",
-            password: "",
-            avatar: "",
-            venueManager: false,
-        },
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      avatar: "",
+      venueManager: false,
+    },
+  });
 
-    const onSubmit = async (data) => {
-        try {
-            const { name, email, avatar, banner, token, venueManager } = await registerUser(data);
-            loginStore(name, email, avatar, banner, token, venueManager);
-            navigate("/");
-        } catch (err) {
-            // Error is already handled by the hook
-            console.error("Registration error:", err);
-        }
-    };
+  const onSubmit = async (data) => {
+    setError(null);
+    try {
+      const { name, email, avatar, banner, token, venueManager } =
+        await registerUser(data);
+      loginStore(name, email, avatar, banner, token, venueManager);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
-    return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 px-4">
-            <div className="w-full max-w-md space-y-8">
-                <h2 className="text-center text-3xl font-bold text-gray-900">
-                    Create an Account
-                </h2>
-
-                {error && (
-                    <div className="mt-4 rounded-md bg-red-50 p-4 border border-red-400">
-                        <p className="text-sm text-red-700">{error}</p>
-                    </div>
-                )}
-
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Name
-                        </label>
-                        <input
-                            {...register("name")}
-                            className={`block w-full rounded-md border ${
-                                errors.name ? 'border-red-500' : 'border-gray-300'
-                            } px-3 py-2`}
-                        />
-                        {errors.name && (
-                            <p className="text-sm text-red-600">{errors.name.message}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Email
-                        </label>
-                        <input
-                            {...register("email")}
-                            type="email"
-                            className={`block w-full rounded-md border ${
-                                errors.email ? 'border-red-500' : 'border-gray-300'
-                            } px-3 py-2`}
-                        />
-                        {errors.email && (
-                            <p className="text-sm text-red-600">{errors.email.message}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            {...register("password")}
-                            className={`block w-full rounded-md border ${
-                                errors.password ? 'border-red-500' : 'border-gray-300'
-                            } px-3 py-2`}
-                        />
-                        {errors.password && (
-                            <p className="text-sm text-red-600">{errors.password.message}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Avatar URL (optional)
-                        </label>
-                        <input
-                            {...register("avatar")}
-                            type="url"
-                            className={`block w-full rounded-md border ${
-                                errors.avatar ? 'border-red-500' : 'border-gray-300'
-                            } px-3 py-2`}
-                        />
-                        {errors.avatar && (
-                            <p className="text-sm text-red-600">{errors.avatar.message}</p>
-                        )}
-                    </div>
-
-                    <div className="flex items-center">
-                        <input
-                            type="checkbox"
-                            {...register("venueManager")}
-                            className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                        />
-                        <label className="ml-2 block text-sm text-gray-900">
-                            Register as a Venue Manager (or do it later through your profile)
-                        </label>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`w-full py-2 px-4 rounded-md text-blue-main ${
-                            loading 
-                                ? 'bg-blue-400 cursor-not-allowed' 
-                                : 'bg-blue-600 hover:bg-blue-700'
-                        }`}
-                    >
-                        {loading ? "Creating account..." : "Sign Up"}
-                    </button>
-                </form>
-            </div>
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 py-12 px-4">
+      <div className="w-full max-w-md space-y-8">
+        {/* Logo & heading */}
+        <div className="flex flex-col items-center">
+          <img
+            src="/logo-icon.svg"
+            alt="Holidaze logo icon"
+            className="h-12 w-auto"
+          />
+          <img
+            src="/logo-text.svg"
+            alt="Holidaze logo"
+            className="mt-4 h-8 w-auto"
+          />
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Create an account
+          </h2>
         </div>
-    );
+
+        {/* Error banner */}
+        {(error || apiError) && (
+          <div className="mt-4 rounded-md bg-red-50 p-4 border border-red-400">
+            <p className="text-sm text-red-700">{error || apiError}</p>
+          </div>
+        )}
+
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
+          <div className="space-y-4 rounded-md">
+            {/* Name */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <div className="mt-1">
+                <input
+                  id="name"
+                  type="text"
+                  {...register("name")}
+                  className={`block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.name ? "border-warning" : "border-gray-300"
+                  }`}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-warning">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email address
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  {...register("email")}
+                  className={`block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.email ? "border-warning" : "border-gray-300"
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-warning">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password"
+                  type="password"
+                  autoComplete="new-password"
+                  {...register("password")}
+                  className={`block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.password ? "border-warning" : "border-gray-300"
+                  }`}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-warning">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Avatar URL (optional) */}
+            <div>
+              <label
+                htmlFor="avatar"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Avatar URL (optional)
+              </label>
+              <div className="mt-1">
+                <input
+                  id="avatar"
+                  type="url"
+                  {...register("avatar")}
+                  className={`block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    errors.avatar ? "border-warning" : "border-gray-300"
+                  }`}
+                />
+                {errors.avatar && (
+                  <p className="mt-1 text-sm text-warning">
+                    {errors.avatar.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Venue Manager (optional) */}
+            <div className="flex items-center">
+              <input
+                id="venueManager"
+                type="checkbox"
+                {...register("venueManager")}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label
+                htmlFor="venueManager"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                Register as a Venue Manager (optional)
+              </label>
+            </div>
+          </div>
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-main ${
+              loading
+                ? "bg-blue-400 cursor-not-allowed"
+                : "hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            }`}
+          >
+            {loading ? "Creating account..." : "Sign up"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }

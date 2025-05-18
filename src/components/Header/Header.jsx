@@ -43,7 +43,7 @@ function Header() {
                     <div className="relative">
                         <button
                             onClick={handleMenuClick}
-                            className="flex items-center space-x-2 bg-[var(--color-neutral-dark)] text-[var(--color-white)] px-4 py-2 rounded"
+                            className="flex items-center space-x-2 bg-[var(--color-blue-main)] text-[var(--color-white)] px-4 py-2 rounded"
                             aria-label="Dropdown menu"
                             aria-expanded={isDropdownOpen}
                         >

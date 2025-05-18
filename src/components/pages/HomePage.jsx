@@ -90,14 +90,14 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={handleClearSearch}
-                    className="bg-red-600 text-neutral-dark px-4 sm:px-8 py-2 sm:py-3 rounded-full hover:bg-red-700 transition-colors"
+                    className="bg-red-600 text-neutral-dark px-4 sm:px-8 py-2 sm:py-3 rounded-full hover:bg-red-700 transition-colors cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 ) : (
                   <button
                     type="submit"
-                    className="bg-blue-600 text-neutral-dark px-4 py-3 rounded-full hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 text-neutral-dark px-4 py-3 rounded-full hover:bg-blue-700 transition-colors cursor-pointer"
                   >
                     <Search className="w-5 h-5 text-gray-400" />
                   </button>
